@@ -16,8 +16,7 @@ func GetConnection() *sql.DB {
 }
 
 func conn_database() *sql.DB {
-	db, err := sql.Open("mysql", "root:abc@/hichartdb")
-	fmt.Println("db--->", db)
+	db, err := sql.Open("mysql", "root:abc@/hichatdb?charset=utf8")
 	if err != nil {
 		fmt.Println("Open database error: ", err)
 	}

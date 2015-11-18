@@ -1,4 +1,5 @@
-$( "#send-btn" ).click(function() {
+//消息发送
+function post_send_message() {
     $.ajax({
         type: "POST",
         url: "http://192.168.0.7:8080/messages",
@@ -15,8 +16,22 @@ $( "#send-btn" ).click(function() {
             alert(errMsg);
         }
     });
+}
+
+//点击发送按钮发送
+$( "#send-btn" ).click(function() {
+    post_send_message()
 
 });
+
+//按 enter 键发送
+$("#message-input").keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        post_send_message()
+    }
+});
+
 
 // 获取新消息
 function get_new_messages() {
@@ -32,10 +47,17 @@ function get_new_messages() {
             //alert(data.status);
             data.body.forEach(function(item){
                 $("#send-body").append('<p>' + item.add_time + ':' + item.msg + '</p>');
+                (function () {
+                    var wtf = $('#send-body');
+                    var height = wtf[0].scrollHeight;
+                    wtf.scrollTop(height);
+                })();
+
             })
+
             setTimeout(function () {
                 get_new_messages()
-            }, 5000);
+            }, 1000);
 
         },
         failure: function(errMsg) {
@@ -44,3 +66,91 @@ function get_new_messages() {
     });
 
 }
+
+
+//auth_signup.html
+//消息发送
+function signup_send_email() {
+
+    $.ajax({
+        url: "http://192.168.0.7:8080/signup/request",
+        method: "POST",
+        // The key needs to match your method's input parameter (case-sensitive).
+        data: JSON.stringify({"email": $("#inputEmail3")[0].value }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+            //console.log(data.authcode_key)
+            $("#authcode_key")[0].value = data.authcode_key
+           // alert(data.status);
+           //$("#message-input")[0].value = ""
+        },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
+    });
+}
+
+//点击发送按钮发送
+$( "#get-authcode-bt" ).click(function() {
+    signup_send_email()
+
+});
+
+$( "#signup-request-form" ).submit(function() {
+  return false;
+});
+
+
+$("#signup-request-bt").click(function () {
+
+    authcode = $("#authcode")[0].value
+    authcode_key = $("#authcode_key")[0].value
+    email = $("#inputEmail3")[0].value
+    username = $("#username")[0].value
+    password = $("#inputPassword3")[0].value
+
+    $.ajax({
+        url: "http://192.168.0.7:8080/register/passwd",
+        method: "POST",
+        // The key needs to match your method's input parameter (case-sensitive).
+        data: JSON.stringify({"authcode": authcode, "email":email, "authcode_key": authcode_key, "username": username, "password":password }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+            console.log(data.authcode_key)
+           //alert(data.status);
+           //$("#message-input")[0].value = ""
+            $("#content").html("注册成功！")
+        },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
+    });
+})
+
+//auth_sigin.html
+$("#signin-bt").click(function () {
+
+
+    username = $("#username")[0].value
+    password = $("#inputPassword3")[0].value
+
+    $.ajax({
+        url: "http://192.168.0.7:8080/auth/signin",
+        method: "POST",
+        // The key needs to match your method's input parameter (case-sensitive).
+        data: JSON.stringify({"username":username, "password":password }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+            //console.log(data.authcode_key)
+            //alert(data.status);
+            //$("#message-input")[0].value = ""
+            $("#content").html("已登录！")
+        },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
+    });
+})

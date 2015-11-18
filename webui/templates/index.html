@@ -9,6 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/my.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,21 +27,11 @@
         </ul>
       </div>
     </nav>
-    <div class="container">
+    <div class="container" id="content">
       <div class="row">
 
-        <div class="col-md-3">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">当前在线用户</h3>
-            </div>
-            <div class="panel-body">
-              Panel content
-            </div>
-          </div>
-        </div>
+        <div class="col-lg-8" id="main-board">
 
-        <div class="col-md-8">
           <div class="panel panel-default">
             <div id="send-body" class="panel-body">
               聊天信息
@@ -55,6 +46,17 @@
           </div><!-- /input-group -->
         </div>
 
+        <div class="col-lg-3">
+          <div id="status-friend" class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">当前在线用户</h3>
+            </div>
+            <div class="panel-body">
+              Panel content
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -64,6 +66,10 @@
     <script src="/static/js/my.js"></script>
     <script>
       get_new_messages()
+      $("#send-body").height($(window).height()-200);
+      $(window).resize(function() {
+        $("#send-body").height($(window).height()-200);
+      });
     </script>
   </body>
 </html>

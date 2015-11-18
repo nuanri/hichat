@@ -34,6 +34,7 @@ func main() {
 	// auth
 	router.POST("/signup/request", auth.SignUpRequest)
 	router.POST("/register/passwd", auth.SignUp)
+	router.POST("/auth/signin", auth.SignIn)
 
 	// message
 	router.GET("/messages", message.GetMessages)
