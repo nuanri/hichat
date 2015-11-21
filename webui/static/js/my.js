@@ -97,6 +97,7 @@ $( "#get-authcode-bt" ).click(function() {
 
 });
 
+
 $( "#signup-request-form" ).submit(function() {
   return false;
 });
@@ -130,6 +131,7 @@ $("#signup-request-bt").click(function () {
 })
 
 //auth_sigin.html
+/*
 $("#signin-bt").click(function () {
 
 
@@ -154,3 +156,4 @@ $("#signin-bt").click(function () {
         }
     });
 })
+*/

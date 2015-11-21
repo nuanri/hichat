@@ -6,6 +6,7 @@ import (
 
 	"nuanri/hichat/api/auth"
 	"nuanri/hichat/api/message"
+	"nuanri/hichat/api/middleware"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -26,15 +27,39 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
+func SessionMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		session, err := middleware.GetSession(c)
+		if err != nil {
+			fmt.Println("===>", err)
+			c.String(400, err.Error())
+			c.Abort()
+			return
+		}
+
+		if session != nil {
+			// Set example variable
+			c.Set("Sid", session.Sid)
+			c.Set("User", session.User)
+		}
+		// before request
+		c.Next()
+		// after request
+	}
+}
+
 func main() {
 
 	router := gin.Default()
 	router.Use(CORSMiddleware())
+	router.Use(SessionMiddleware())
 
 	// auth
 	router.POST("/signup/request", auth.SignUpRequest)
 	router.POST("/register/passwd", auth.SignUp)
 	router.POST("/auth/signin", auth.SignIn)
+	router.GET("/auth/userinfo", auth.GetUserInfo)
 
 	// message
 	router.GET("/messages", message.GetMessages)

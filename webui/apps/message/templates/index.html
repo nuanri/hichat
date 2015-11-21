@@ -1,0 +1,35 @@
+{{define "content"}}
+      <div class="row">
+
+        <div class="col-lg-8" id="main-board">
+
+          <div class="panel panel-default">
+            <div id="send-body" class="panel-body">
+              聊天信息
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input id="message-input" type="text" class="form-control" placeholder="Hello, World!">
+            <span class="input-group-btn">
+              <button id="send-btn" class="btn btn-default" type="button">发送</button>
+            </span>
+          </div><!-- /input-group -->
+        </div>
+
+        <div class="col-lg-3">
+          <div id="status-friend" class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">在线成员</h3>
+            </div>
+            <div class="panel-body">
+              {{range $index, $value := .online_users}}
+              <p>{{$value}}</p>
+              {{end}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+{{end}}

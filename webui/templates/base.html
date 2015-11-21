@@ -21,43 +21,21 @@
   <body>
     <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
-        <a class="navbar-brand" href="#">HiChat</a>
+        <a class="navbar-brand" href="/">HiChat</a>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">登录</a></li>
+          {{if .User.Username}}
+          <li><a href="#">{{.User.Username}}</a></li>
+          {{else}}
+          <li><a href="/signup/request">注册</a></li>
+          <li><a href="/auth/signin">登录</a></li>
+          {{end}}
         </ul>
       </div>
     </nav>
     <div class="container" id="content">
-      <div class="row">
 
-        <div class="col-lg-8" id="main-board">
+      {{template "content" .}}
 
-          <div class="panel panel-default">
-            <div id="send-body" class="panel-body">
-              聊天信息
-            </div>
-          </div>
-
-          <div class="input-group">
-            <input id="message-input" type="text" class="form-control" placeholder="Hello, World!">
-            <span class="input-group-btn">
-              <button id="send-btn" class="btn btn-default" type="button">发送</button>
-            </span>
-          </div><!-- /input-group -->
-        </div>
-
-        <div class="col-lg-3">
-          <div id="status-friend" class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">当前在线用户</h3>
-            </div>
-            <div class="panel-body">
-              Panel content
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
@@ -71,5 +49,6 @@
         $("#send-body").height($(window).height()-200);
       });
     </script>
+
   </body>
 </html>
