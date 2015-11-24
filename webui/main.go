@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"github.com/gin-gonic/gin"
 
 	"nuanri/hichat/webui/apps/auth"
@@ -25,10 +25,8 @@ func authMiddleware() gin.HandlerFunc {
 			c.Redirect(302, "/auth/signin")
 		}
 
-		fmt.Println("sid===>", sid)
-		//		if sid := session.Sid; sid = "" {
-		//			c.Redirect(302, "/auth/signin")
-		//		}
+		//fmt.Println("sid===>", sid)
+
 		// Set example variable
 		if session != nil {
 			c.Set("Sid", session.Sid)

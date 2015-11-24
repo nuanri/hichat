@@ -41,6 +41,21 @@
         $("#send-body").height($(window).height()-200);
         });
         });
+
+        $(function(){
+        $("#onlineuser").height($(window).height()-200);
+        $(window).resize(function() {
+        $("#onlineuser").height($(window).height()-200);
+        });
+        });
+
+        $(function () {
+        var wtf = $('#send-body');
+        var height = wtf[0].scrollHeight;
+        wtf.scrollTop(height);
+        })();
+
+
       </script>
 
 {{end}}

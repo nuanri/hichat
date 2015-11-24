@@ -42,7 +42,8 @@ type LS struct {
 }
 
 type M struct {
-	Sid string `json:"sid"`
+	Sid   string `json:"sid"`
+	Error string
 }
 
 type UserInfo struct {
@@ -53,6 +54,9 @@ type UserInfo struct {
 }
 
 func PostSignin(c *gin.Context) {
+	var listTmpl = template.Must(template.ParseFiles("templates/base.html",
+		"apps/auth/templates/auth_signin.html"))
+
 	var form LS
 	err := c.Bind(&form)
 	if err == nil {
@@ -60,18 +64,21 @@ func PostSignin(c *gin.Context) {
 		url := "http://192.168.0.7:8080/auth/signin"
 		method := "POST"
 		body := GetBackendApi("", method, url, b)
-		//fmt.Println("body=", body)
+
 		var m M
 		ParseMsg(body, &m)
+		signinerror := m.Error
+		if signinerror != "" {
+			tc := make(map[string]interface{})
+			tc["SError"] = signinerror
+
+			if err := listTmpl.Execute(c.Writer, tc); err != nil {
+				fmt.Println(err.Error())
+			}
+			return
+		}
 		// 设置 web client cookie
 		http.SetCookie(c.Writer, &http.Cookie{Name: "Sid", Value: m.Sid, Path: "/"})
-		/*
-			user_url := "http://192.168.0.7:8080/auth/userinfo"
-			user_method := "GET"
-			uinfo := GetBackendApi(m.Sid, user_method, user_url, nil)
-			var u UserInfo
-			ParseMsg(uinfo, &u)
-		*/
 		bapi := GetBackendApi2(c)
 		bapi.Sid = m.Sid
 		u := &UserInfo{}

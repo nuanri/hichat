@@ -48,8 +48,10 @@ function get_new_messages() {
             //alert(data.status);
             data.body.forEach(function(item){
                 $("#send-body").append('<p>' + item.username + " say" + ' : ' + item.msg + '</p>');
+                //在消息显示框内最底层，最后的输入总是显示在框内最后
                 (function () {
                     var wtf = $('#send-body');
+                    //返回整个元素的高度
                     var height = wtf[0].scrollHeight;
                     wtf.scrollTop(height);
                 })();
@@ -81,8 +83,9 @@ function get_new_messages() {
 
 
 //auth_signup.html
-//消息发送
-function signup_send_email() {
+//发送验证码
+$( "#get-authcode-bt" ).bind("click", function() {
+    $(this).unbind("click");
 
     $.ajax({
         url: "http://192.168.0.7:8080/signup/request",
@@ -92,8 +95,13 @@ function signup_send_email() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data){
-            //console.log(data.authcode_key)
-            $("#authcode_key")[0].value = data.authcode_key
+            console.log(data)
+            $("#signup-error").empty()
+            if (data.error)
+                $("#signup-error").append(data.error)
+            else 
+                $("#authcode_key")[0].value = data.authcode_key
+
            // alert(data.status);
            //$("#message-input")[0].value = ""
         },
@@ -101,14 +109,7 @@ function signup_send_email() {
             alert(errMsg);
         }
     });
-}
-
-//点击发送按钮发送
-$( "#get-authcode-bt" ).click(function() {
-    signup_send_email()
-
-});
-
+})
 
 $( "#signup-request-form" ).submit(function() {
   return false;
@@ -132,10 +133,11 @@ $("#signup-request-bt").click(function () {
         dataType: "json",
         success: function(data){
             console.log(data.authcode_key)
-           //alert(data.status);
-           //$("#message-input")[0].value = ""
-            //$("#content").html("注册成功！")
-            window.location = "http://192.168.0.7:8888/auth/signin"
+            $("#signup-error").empty()
+            if (data.error)
+                $("#signup-error").append(data.error)
+            else
+                window.location = "/auth/signin"
 
         },
         failure: function(errMsg) {
@@ -150,12 +152,11 @@ $("#signout").click(function (event) {
         url: $(this).attr('href'),
         cache: false,
         success: function(data){
-            window.location = "http://192.168.0.7:8888/auth/signin"
+            window.location = "/auth/signin"
         },
         failure: function(errMsg) {
             alert(errMsg);
         }
     });
 })
-
 

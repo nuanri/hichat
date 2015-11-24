@@ -15,7 +15,14 @@ func SignUpRequest(c *gin.Context) {
 	err := c.BindJSON(s)
 	if err == nil {
 		conn := db.GetConnection()
+		if s.Email == "" {
+			c.JSON(200, gin.H{"error": "请填入注册邮件！"})
+			log.Info("email already registered")
+			return
+		}
+
 		if s.verify_email_reg(conn) {
+			c.JSON(200, gin.H{"error": "此邮件已被注册！"})
 			log.Info("email already registered")
 			return
 		}
@@ -61,12 +68,20 @@ func SignUp(c *gin.Context) {
 	if c.BindJSON(s) == nil {
 		conn := db.GetConnection()
 		if !s.verify_authcode(conn) {
+			c.JSON(200, gin.H{"error": "验证码错误！"})
 			log.Error("verify_authcode return false")
 			return
 		}
 
 		if s.verify_username_reg(conn) {
+			c.JSON(200, gin.H{"error": "用户名已被注册！"})
 			log.Error("username already registered")
+			return
+		}
+
+		if (len(s.Password) < 6) || (len(s.Password)) > 20 {
+			c.JSON(200, gin.H{"error": "请输入6-20位密码!"})
+			log.Error("password to long or to short")
 			return
 		}
 
@@ -88,11 +103,11 @@ func SignIn(c *gin.Context) {
 	err := c.BindJSON(&l)
 	if err == nil {
 		if l.Username == "" {
-			c.JSON(400, gin.H{"error": "no-username"})
+			c.JSON(400, gin.H{"error": "请输入用户名！"})
 			return
 		}
 		if l.Password == "" {
-			c.JSON(400, gin.H{"error": "no-password"})
+			c.JSON(400, gin.H{"error": "请输入密码！"})
 			return
 		}
 		conn := db.GetConnection()

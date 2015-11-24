@@ -7,8 +7,10 @@
     margin-top: 100px;
 }
 
-
 #siginform {
     margin-top: 100px;
 }
 
+#signin-error, #signup-error{
+    color:red;
+}
