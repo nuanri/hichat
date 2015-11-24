@@ -5,7 +5,9 @@
 
           <div class="panel panel-default">
             <div id="send-body" class="panel-body">
-              聊天信息
+              {{range $index, $msg := .body}}
+              <p>{{$msg.username}} <span>say</span>: {{$msg.msg}}</p>
+              {{end}}
             </div>
           </div>
 
@@ -22,8 +24,8 @@
             <div class="panel-heading">
               <h3 class="panel-title">在线成员</h3>
             </div>
-            <div class="panel-body">
-              {{range $index, $value := .online_users}}
+            <div id="onlineuser"class="panel-body">
+              {{range $index, $value := .onlineusers}}
               <p>{{$value}}</p>
               {{end}}
             </div>
@@ -31,5 +33,14 @@
         </div>
 
       </div>
+      <script>
+        $(function(){
+        get_new_messages()
+        $("#send-body").height($(window).height()-200);
+        $(window).resize(function() {
+        $("#send-body").height($(window).height()-200);
+        });
+        });
+      </script>
 
 {{end}}

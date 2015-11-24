@@ -6,13 +6,24 @@ import (
 	//_ "github.com/mattn/go-sqlite3"
 )
 
-func insert_auth(db *sql.DB, user_id int, username string, password string, email string) {
-	stmt, err := db.Prepare("insert into auth_user(id, username, password, email) values (?,?,?,?)")
+func insert_auth(db *sql.DB, user_id int, username string, last_activity_time string, email string) {
+
+	row := db.QueryRow("select count(id) from auth_user  where user_id=?", user_id)
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		fmt.Println(err)
+	}
+	if count > 0 {
+		return
+	}
+
+	stmt, err := db.Prepare("insert into auth_user(user_id, username, email, last_activity_time) values (?,?,?,?)")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(user_id, username, password, email)
+	stmt.Exec(user_id, username, email, last_activity_time)
 }
 
 func insert_session(db *sql.DB, user_id int, sid string) {
@@ -35,19 +46,12 @@ func insert_session(db *sql.DB, user_id int, sid string) {
 	}
 }
 
-/*
-type Userinfo struct {
-	Id       int
-	Email    string
-	Username string
-}*/
-
-/*func get_userinfo(db *sql.DB, sid string) interface{} {
-	var u Userinfo
-	row := db.QueryRow("select id, username, email from auth_user where id=(select user_id from auth_session where sid=?)", sid)
-	err := row.Scan(&u.Id, &u.Username, &u.Email)
+func signout_del_session(db *sql.DB, sid string) {
+	stmt, err := db.Prepare(`DELETE FROM auth_session WHERE sid=?`)
 	if err != nil {
-		fmt.Println("Signin Scan username failed:", err)
+		fmt.Println(err)
+		return
 	}
-	return u
-}*/
+
+	stmt.Exec(sid)
+}

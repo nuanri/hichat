@@ -180,19 +180,35 @@ type UserInfo struct {
 	Sid string `json:"sid"`
 }
 
-func get_userinfo(db *sql.DB, sid string) (int, string, string, string) {
-	fmt.Println("sid==>",sid)
+func get_userinfo(db *sql.DB, sid string) map[string]interface{} {
 
-	row := db.QueryRow("select a.id, a.username, a.password, a.email from  auth_user a, auth_session b where a.id=b.user_id and b.sid=?", sid)
+	row := db.QueryRow("select a.id, a.username, a.email, a.last_activity_time from  auth_user a, auth_session b where a.id=b.user_id and b.sid=?", sid)
 	var id int
 	var username string
-	var password string
+	var last_activity_time string
 	var email string
 
-	err := row.Scan(&id, &username, &password, &email)
+	err := row.Scan(&id, &username, &email, &last_activity_time)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	return id, username, password, email
+	data := map[string]interface{}{
+		"id":                 id,
+		"username":           username,
+		"email":              email,
+		"last_activity_time": last_activity_time,
+	}
+	//fmt.Println("data===>", data)
+	return data
+}
+
+func signout_del_session(db *sql.DB, sid string) {
+	stmt, err := db.Prepare(`DELETE FROM auth_session WHERE sid=?`)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	stmt.Exec(sid)
 }

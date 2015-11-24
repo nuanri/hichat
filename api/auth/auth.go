@@ -129,8 +129,15 @@ func SignIn(c *gin.Context) {
 func GetUserInfo(c *gin.Context) {
 	conn := db.GetConnection()
 	sid := c.Request.Header.Get("Sid")
-	//fmt.Println("=====>sid==>", sid)
-	id, username, password, email := get_userinfo(conn, sid)
-	c.JSON(200, gin.H{"id": id, "email": email, "password": password, "username": username})
 
+	data := get_userinfo(conn, sid)
+	c.JSON(200, gin.H{"id": data["id"], "email": data["email"], "username": data["username"], "last_activity_time": data["last_activity_time"]})
+
+}
+
+func Signout(c *gin.Context) {
+	Sid, _ := c.Get("Sid")
+	sid := Sid.(string)
+	conn := db.GetConnection()
+	signout_del_session(conn, sid)
 }

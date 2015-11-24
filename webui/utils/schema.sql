@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS `auth_user` (
     `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `user_id` INTEGER NOT NULL,
     `username` VARCHAR(128) NULL,
     `password` VARCHAR(512) NULL,
     `email` VARCHAR(128) NULL,

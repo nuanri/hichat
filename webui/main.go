@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"github.com/gin-gonic/gin"
 
 	"nuanri/hichat/webui/apps/auth"
@@ -10,7 +10,7 @@ import (
 	"nuanri/hichat/webui/utils"
 )
 
-func Logger() gin.HandlerFunc {
+func authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		session, err := middleware.GetSession(c)
@@ -19,6 +19,16 @@ func Logger() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		sid := session.Sid
+		if sid == "" {
+			c.Redirect(302, "/auth/signin")
+		}
+
+		fmt.Println("sid===>", sid)
+		//		if sid := session.Sid; sid = "" {
+		//			c.Redirect(302, "/auth/signin")
+		//		}
 		// Set example variable
 		if session != nil {
 			c.Set("Sid", session.Sid)
@@ -34,19 +44,23 @@ func main() {
 	utils.InitDB()
 
 	r := gin.Default()
-	r.Use(Logger())
 
+	r.StaticFile("/favicon.ico", "./static/favicon.ico")
 	r.Static("/static", "./static")
 	r.LoadHTMLGlob("templates/*")
 	//router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
 	r.GET("/signup/request", auth.SignupRequest)
 	r.GET("/auth/signin", auth.GetSignin)
 	r.POST("/auth/signin", auth.PostSignin)
+	r.GET("/auth/signout", auth.Siginout)
 
-	r.GET("/", message.IndexHandler)
+	auth := r.Group("/")
+	auth.Use(authMiddleware())
 
-	r.GET("/api/messages", message.GetMessages)
-	r.POST("/api/messages", message.PostMessages)
+	auth.GET("/", message.IndexHandler)
+
+	auth.GET("/api/messages", message.GetMessages)
+	auth.POST("/api/messages", message.PostMessages)
 
 	r.Run(":8888")
 }

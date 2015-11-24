@@ -32,7 +32,7 @@ func SessionMiddleware() gin.HandlerFunc {
 
 		session, err := middleware.GetSession(c)
 		if err != nil {
-			fmt.Println("===>", err)
+			//fmt.Println("===>", err)
 			c.String(400, err.Error())
 			c.Abort()
 			return
@@ -60,6 +60,7 @@ func main() {
 	router.POST("/register/passwd", auth.SignUp)
 	router.POST("/auth/signin", auth.SignIn)
 	router.GET("/auth/userinfo", auth.GetUserInfo)
+	router.GET("/auth/signout", auth.Signout)
 
 	// message
 	router.GET("/messages", message.GetMessages)

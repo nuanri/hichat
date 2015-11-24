@@ -46,10 +46,10 @@ type M struct {
 }
 
 type UserInfo struct {
-	Userid   int    `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
+	Userid             int `json:"id"`
+	Username           string
+	Last_activity_time string
+	Email              string
 }
 
 func PostSignin(c *gin.Context) {
@@ -60,25 +60,53 @@ func PostSignin(c *gin.Context) {
 		url := "http://192.168.0.7:8080/auth/signin"
 		method := "POST"
 		body := GetBackendApi("", method, url, b)
-		fmt.Println("body=", body)
+		//fmt.Println("body=", body)
 		var m M
 		ParseMsg(body, &m)
 		// 设置 web client cookie
 		http.SetCookie(c.Writer, &http.Cookie{Name: "Sid", Value: m.Sid, Path: "/"})
+		/*
+			user_url := "http://192.168.0.7:8080/auth/userinfo"
+			user_method := "GET"
+			uinfo := GetBackendApi(m.Sid, user_method, user_url, nil)
+			var u UserInfo
+			ParseMsg(uinfo, &u)
+		*/
+		bapi := GetBackendApi2(c)
+		bapi.Sid = m.Sid
+		u := &UserInfo{}
+		if err := bapi.Get(&u, "http://192.168.0.7:8080/auth/userinfo"); err != nil {
+			fmt.Println("获取用户信息出错:", err)
+			return
+		}
 
-		user_url := "http://192.168.0.7:8080/auth/userinfo"
-		user_method := "GET"
-		uinfo := GetBackendApi(m.Sid, user_method, user_url, nil)
-
-		var u UserInfo
-		ParseMsg(uinfo, &u)
-		fmt.Printf("u = %#v\n", u)
+		//fmt.Printf("u = %#v\n", u)
 		conn := utils.OpenDB()
-		insert_auth(conn, u.Userid, u.Username, u.Password, u.Email)
+		insert_auth(conn, u.Userid, u.Username, u.Last_activity_time, u.Email)
 		insert_session(conn, u.Userid, m.Sid)
 
 		c.Redirect(302, "/")
 	}
 	fmt.Println("bind failed:", err)
 
+}
+
+func Siginout(c *gin.Context) {
+	conn := utils.OpenDB()
+
+	cookie, err := c.Request.Cookie("Sid")
+	if err != nil {
+		fmt.Println("Signout 出错！")
+		return
+	}
+	sid := cookie.Value
+	signout_del_session(conn, sid)
+	url := "http://192.168.0.7:8080/auth/signout"
+	method := "GET"
+	var b []byte
+	body := GetBackendApi(sid, method, url, b)
+	fmt.Println("1111body=", string(body))
+	sid = ""
+	// 设置 web client cookie
+	http.SetCookie(c.Writer, &http.Cookie{Name: "Sid", Value: sid, Path: "/"})
 }

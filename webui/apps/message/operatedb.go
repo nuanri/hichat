@@ -1,9 +1,9 @@
 package message
 
+/*
 import (
 	"database/sql"
 	"fmt"
-	//_ "github.com/mattn/go-sqlite3"
 )
 
 func get_useronline(db *sql.DB) []string {
@@ -25,3 +25,4 @@ func get_useronline(db *sql.DB) []string {
 	}
 	return online_users
 }
+*/

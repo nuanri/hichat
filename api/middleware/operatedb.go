@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"time"
 )
 
 func (u *Userinfo) get_userinfo(db *sql.DB, sid string) {
@@ -17,13 +18,14 @@ func (u *Userinfo) get_userinfo(db *sql.DB, sid string) {
 
 func (u *Userinfo) set_useronline(db *sql.DB, id int) {
 
-	stmt, err := db.Prepare(`UPDATE auth_user SET online=? WHERE id=?`)
+	stmt, err := db.Prepare(`UPDATE auth_user SET online=?, last_activity_time=?  WHERE id=?`)
 	if err != nil {
 		fmt.Println(err)
 	}
-	res, err := stmt.Exec(1, id)
+	res, err := stmt.Exec(1, time.Now(), id)
 	fmt.Println(res)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 }

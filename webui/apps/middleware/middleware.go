@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	//log "github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"nuanri/hichat/webui/utils"
@@ -22,6 +23,7 @@ func GetSession(c *gin.Context) (session *Session, err error) {
 	db := utils.OpenDB()
 	var u Userinfo
 	cookie, err := c.Request.Cookie("Sid")
+	fmt.Println("Sid-->", cookie)
 	if err != nil {
 		return
 	}
