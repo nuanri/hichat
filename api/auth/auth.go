@@ -26,19 +26,19 @@ func SignUpRequest(c *gin.Context) {
 			log.Info("email already registered")
 			return
 		}
+
 		s.Authcode = RandseqDigit(6)
 		s.Authcode_key = Randseq(64)
-		fmt.Println("注册邮箱是： ", s.Email)
+		fmt.Println("注册邮箱是： ", s.Email, s.Authcode)
 
 		insert_authcode(conn, s.Authcode_key, s.Authcode, s.Email)
 
-		SendMail(s.Email, s.Authcode)
+		//SendMail(s.Email, s.Authcode)
 
 		c.JSON(200, gin.H{"authcode_key": s.Authcode_key})
 	} else {
 		c.JSON(400, gin.H{"error": err.Error()})
 	}
-
 }
 
 //使用 sendcloud 发送邮件
@@ -58,7 +58,7 @@ func SendMail(email string, authcode string) {
 		"%name%":     []string{email},
 		"%authcode%": []string{authcode},
 	}
-	fmt.Println("name==>authocode", email, authcode)
+
 	s.TemplateSend(tos, subs, tpl_name)
 }
 
@@ -85,6 +85,10 @@ func SignUp(c *gin.Context) {
 			return
 		}
 
+		password := EncryptPassword(s.Password)
+		fmt.Printf("password===>, %x\n", password)
+		s.Password = password
+
 		if !insert_user(conn, s.Username, s.Password, s.Email) {
 			log.Error("insert_user return false")
 			return
@@ -95,7 +99,6 @@ func SignUp(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "fail"})
 		return
 	}
-
 }
 
 func SignIn(c *gin.Context) {

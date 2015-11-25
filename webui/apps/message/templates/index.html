@@ -6,7 +6,7 @@
           <div class="panel panel-default">
             <div id="send-body" class="panel-body">
               {{range $index, $msg := .body}}
-              <p>{{$msg.username}} <span>say</span>: {{$msg.msg}}</p>
+              <p><b>{{$msg.username}} </b><span>say</span>: {{$msg.msg}}</p>
               {{end}}
             </div>
           </div>

@@ -125,14 +125,20 @@ func (l *Login) verify_user(db *sql.DB) bool {
 func (l *Login) user_login(db *sql.DB) (bool, int) {
 	mark_password := false
 
-	row := db.QueryRow("select id from auth_user where password=? and username=?", l.Password, l.Username)
+	row := db.QueryRow("select id, password from auth_user where username=?", l.Username)
+	var password string
 	var id int
-	err := row.Scan(&id)
+	err := row.Scan(&id, &password)
 	if err != nil {
 		fmt.Println("login Scan password failed:", err)
 		return mark_password, id
 	}
-	mark_password = true
+
+	x := CheckPassword(password, l.Password)
+	if x {
+		mark_password = true
+		return mark_password, id
+	}
 	return mark_password, id
 }
 
@@ -161,7 +167,7 @@ func insert_sid(db *sql.DB, sid string, user_id int) {
 	stmt.Exec(user_id, sid)
 }
 
-//如果  user_id 在 auth_session 存在，就去当前的 sid
+//如果  user_id 在 auth_session 存在，就取当前的 sid
 func select_sid(db *sql.DB, user_id int) string {
 
 	row := db.QueryRow("select sid from auth_session where user_id=?", user_id)

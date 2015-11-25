@@ -47,7 +47,7 @@ function get_new_messages() {
         success: function(data){
             //alert(data.status);
             data.body.forEach(function(item){
-                $("#send-body").append('<p>' + item.username + " say" + ' : ' + item.msg + '</p>');
+                $("#send-body").append('<p><b>' + item.username + "</b> say" + ' : ' + item.msg + '</p>');
                 //在消息显示框内最底层，最后的输入总是显示在框内最后
                 (function () {
                     var wtf = $('#send-body');
