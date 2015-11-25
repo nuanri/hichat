@@ -28,3 +28,4 @@ api/tmp
 webui/tmp
 
 *.db
+webui/hichat.db
