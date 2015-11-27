@@ -63,11 +63,10 @@ func (b *BackenApi) Get(obj interface{}, url string) error {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	//fmt.Printf("%#v\n", string(body))
 	if err != nil {
 		return err
 	}
-
-	//fmt.Printf("%#v\n", body)
 	//fmt.Printf("[BACKEND API] GET %s\n%s\n", url, string(body))
 
 	return json.Unmarshal(body, obj)

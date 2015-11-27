@@ -1,7 +1,7 @@
 package message
 
 import (
-	"fmt"
+	//"fmt"
 	"net/http"
 	"time"
 	//log "github.com/Sirupsen/logrus"
@@ -29,6 +29,11 @@ func NewMessage(c *gin.Context) {
 	if c.BindJSON(&msg) == nil {
 		//fmt.Printf("%#v\n", msg)
 		conn := db.GetConnection()
+		//fmt.Println("--->", username)
+		if username == "" {
+			c.JSON(400, gin.H{"error": "session expired"})
+			return
+		}
 		insert_message(conn, msg.Body, username)
 		if msg.To != "" {
 			//fmt.Println("go to:", msg.To)
@@ -61,7 +66,7 @@ func GetMessages(c *gin.Context) {
 		utcnow := now.Add(-8 * time.Hour)
 		d_time := utcnow.Add(-10 * time.Minute)
 		drop_time := d_time.Format("2006-01-02 15:04:05")
-		fmt.Println("drop_time", drop_time)
+		//fmt.Println("drop_time", drop_time)
 
 		for {
 			data_time = select_message_time(conn, mysql_dt)

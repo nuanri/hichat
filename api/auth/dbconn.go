@@ -157,7 +157,6 @@ func select_session_user_id(db *sql.DB, user_id int) bool {
 
 //向 auth_session 中插入记录
 func insert_sid(db *sql.DB, sid string, user_id int) {
-
 	stmt, err := db.Prepare("insert into auth_session(user_id, sid) VALUES(?, ?)")
 	if err != nil {
 		fmt.Println(err)
@@ -188,22 +187,22 @@ type UserInfo struct {
 
 func get_userinfo(db *sql.DB, sid string) map[string]interface{} {
 
-	row := db.QueryRow("select a.id, a.username, a.email, a.last_activity_time from  auth_user a, auth_session b where a.id=b.user_id and b.sid=?", sid)
+	row := db.QueryRow("select a.id, a.username, a.email, a.last_msg_time from  auth_user a, auth_session b where a.id=b.user_id and b.sid=?", sid)
 	var id int
 	var username string
-	var last_activity_time string
+	var last_msg_time string
 	var email string
 
-	err := row.Scan(&id, &username, &email, &last_activity_time)
+	err := row.Scan(&id, &username, &email, &last_msg_time)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	data := map[string]interface{}{
-		"id":                 id,
-		"username":           username,
-		"email":              email,
-		"last_activity_time": last_activity_time,
+		"id":            id,
+		"username":      username,
+		"email":         email,
+		"last_msg_time": last_msg_time,
 	}
 	//fmt.Println("data===>", data)
 	return data

@@ -8,6 +8,9 @@ function post_send_message() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data){
+           if (data.error)
+                window.location = "/auth/signin"
+
             console.log("post message: data = " + data)
             //alert(data.status);
             //$("#send-body").append('<p>' + data.body + '</p>');
@@ -47,7 +50,13 @@ function get_new_messages() {
         success: function(data){
             //alert(data.status);
             data.body.forEach(function(item){
-                $("#send-body").append('<p><b>' + item.username + "</b> say" + ' : ' + item.msg + '</p>');
+
+                if (item.username == "") {
+                    window.location = "/auth/signin"
+                }
+                else{
+                    $("#send-body").append('<p><b>' + item.username + "</b> say" + ' : ' + item.msg + '</p>');
+                }
                 //在消息显示框内最底层，最后的输入总是显示在框内最后
                 (function () {
                     var wtf = $('#send-body');
@@ -134,10 +143,12 @@ $("#signup-request-bt").click(function () {
         success: function(data){
             console.log(data.authcode_key)
             $("#signup-error").empty()
-            if (data.error)
+            if (data.error) {
                 $("#signup-error").append(data.error)
-            else
+            }
+            else {
                 window.location = "/auth/signin"
+            }
 
         },
         failure: function(errMsg) {

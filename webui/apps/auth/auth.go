@@ -47,10 +47,10 @@ type M struct {
 }
 
 type UserInfo struct {
-	Userid             int `json:"id"`
-	Username           string
-	Last_activity_time string
-	Email              string
+	Userid        int `json:"id"`
+	Username      string
+	Last_msg_time string
+	Email         string
 }
 
 func PostSignin(c *gin.Context) {
@@ -88,9 +88,14 @@ func PostSignin(c *gin.Context) {
 		}
 
 		//fmt.Printf("u = %#v\n", u)
+		//fmt.Println("SId====>", m.Sid)
 		conn := utils.OpenDB()
-		insert_auth(conn, u.Userid, u.Username, u.Last_activity_time, u.Email)
-		insert_session(conn, u.Userid, m.Sid)
+		if u.Userid != 0 {
+			insert_auth(conn, u.Userid, u.Username, u.Last_msg_time, u.Email)
+			insert_session(conn, u.Userid, m.Sid)
+		} else {
+			c.Redirect(302, "/auth/signin")
+		}
 
 		c.Redirect(302, "/")
 	}
@@ -107,7 +112,7 @@ func Siginout(c *gin.Context) {
 		return
 	}
 	sid := cookie.Value
-	signout_del_session(conn, sid)
+	Signout_del_session(conn, sid)
 	url := "http://192.168.0.7:8080/auth/signout"
 	method := "GET"
 	var b []byte

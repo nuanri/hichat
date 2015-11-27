@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
     `password` VARCHAR(512) NULL,
     `email` VARCHAR(128) NULL,
     `online` BOOLEAN NULL CHECK (online IN (0,1)),
-    `last_activity_time` datetime DEFAULT NULL
+    `last_msg_time` datetime DEFAULT NULL,
+    `last_act_time` datetime DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `auth_session` (

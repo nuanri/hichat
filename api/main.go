@@ -33,7 +33,8 @@ func SessionMiddleware() gin.HandlerFunc {
 		session, err := middleware.GetSession(c)
 		if err != nil {
 			//fmt.Println("===>", err)
-			c.String(400, err.Error())
+			//c.String(400, err.Error())
+			c.JSON(400, gin.H{"error": err.Error()})
 			c.Abort()
 			return
 		}

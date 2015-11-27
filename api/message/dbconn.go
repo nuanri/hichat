@@ -8,7 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//存入消息，并 update auth_user 表里的 last_activity_time
+//存入消息，并 update auth_user 表里的 last_msg_time
 func insert_message(db *sql.DB, body string, username string) {
 
 	stmt, err := db.Prepare("insert into msg_record(msg, user, add_time) VALUES(?,?,?)")
@@ -19,7 +19,7 @@ func insert_message(db *sql.DB, body string, username string) {
 	defer stmt.Close()
 	stmt.Exec(body, username, time.Now())
 
-	stmt, err = db.Prepare("update auth_user set last_activity_time=? where username=?")
+	stmt, err = db.Prepare("update auth_user set last_msg_time=? where username=?")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -111,7 +111,7 @@ func select_message_new(db *sql.DB) []map[string]interface{} {
 func get_useronline(db *sql.DB, drop_time string) []string {
 	var online_users []string
 
-	stmt, err := db.Prepare(`UPDATE auth_user SET online=?  WHERE last_activity_time<=?`)
+	stmt, err := db.Prepare(`UPDATE auth_user SET online=?  WHERE last_msg_time<=?`)
 	if err != nil {
 		fmt.Println(err)
 	}

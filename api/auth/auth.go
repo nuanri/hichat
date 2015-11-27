@@ -149,7 +149,7 @@ func GetUserInfo(c *gin.Context) {
 	sid := c.Request.Header.Get("Sid")
 
 	data := get_userinfo(conn, sid)
-	c.JSON(200, gin.H{"id": data["id"], "email": data["email"], "username": data["username"], "last_activity_time": data["last_activity_time"]})
+	c.JSON(200, gin.H{"id": data["id"], "email": data["email"], "username": data["username"], "last_msg_time": data["last_msg_time"]})
 
 }
 

@@ -6,7 +6,7 @@ import (
 	//_ "github.com/mattn/go-sqlite3"
 )
 
-func insert_auth(db *sql.DB, user_id int, username string, last_activity_time string, email string) {
+func insert_auth(db *sql.DB, user_id int, username string, last_msg_time string, email string) {
 
 	row := db.QueryRow("select count(id) from auth_user  where user_id=?", user_id)
 	var count int
@@ -18,12 +18,12 @@ func insert_auth(db *sql.DB, user_id int, username string, last_activity_time st
 		return
 	}
 
-	stmt, err := db.Prepare("insert into auth_user(user_id, username, email, last_activity_time) values (?,?,?,?)")
+	stmt, err := db.Prepare("insert into auth_user(user_id, username, email, last_msg_time) values (?,?,?,?)")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer stmt.Close()
-	stmt.Exec(user_id, username, email, last_activity_time)
+	stmt.Exec(user_id, username, email, last_msg_time)
 }
 
 func insert_session(db *sql.DB, user_id int, sid string) {
@@ -34,6 +34,13 @@ func insert_session(db *sql.DB, user_id int, sid string) {
 		fmt.Println(err)
 	}
 	if count > 0 {
+		stmt, err := db.Prepare("update auth_session set sid=? where user_id=?")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		stmt.Exec(sid, user_id)
+		defer stmt.Close()
 		return
 	}
 	stmt, err := db.Prepare("insert into auth_session(user_id, sid) values (?,?)")
@@ -46,7 +53,7 @@ func insert_session(db *sql.DB, user_id int, sid string) {
 	}
 }
 
-func signout_del_session(db *sql.DB, sid string) {
+func Signout_del_session(db *sql.DB, sid string) {
 	stmt, err := db.Prepare(`DELETE FROM auth_session WHERE sid=?`)
 	if err != nil {
 		fmt.Println(err)

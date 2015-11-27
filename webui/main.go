@@ -15,7 +15,8 @@ func authMiddleware() gin.HandlerFunc {
 
 		session, err := middleware.GetSession(c)
 		if err != nil {
-			c.String(400, err.Error())
+			c.Redirect(302, "/auth/signin")
+			//c.String(400, err.Error())
 			c.Abort()
 			return
 		}
@@ -25,7 +26,9 @@ func authMiddleware() gin.HandlerFunc {
 			c.Redirect(302, "/auth/signin")
 		}
 
-		//fmt.Println("sid===>", sid)
+		if userid := session.User.Id; userid == 0 {
+			c.Redirect(302, "/auth/signin")
+		}
 
 		// Set example variable
 		if session != nil {
