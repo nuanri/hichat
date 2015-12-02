@@ -1,25 +1,31 @@
 //消息发送
 function post_send_message() {
-    $.ajax({
-        type: "POST",
-        url: "/api/messages",
-        // The key needs to match your method's input parameter (case-sensitive).
-        data: JSON.stringify({ "to": "Jian", "body": $("#message-input")[0].value }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(data){
-           if (data.error)
-                window.location = "/auth/signin"
+    var msg = $("#message-input")[0].value
+    
+    if (msg == "") {
+        //alert("字符串为空")
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "/api/messages",
+            // The key needs to match your method's input parameter (case-sensitive).
+            data: JSON.stringify({ "to": "Jian", "body": msg }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data){
+                if (data.error)
+                    window.location = "/auth/signin"
 
-            console.log("post message: data = " + data)
-            //alert(data.status);
-            //$("#send-body").append('<p>' + data.body + '</p>');
-            $("#message-input")[0].value = ""
-        },
-        failure: function(errMsg) {
-            alert(errMsg);
-        }
-    });
+                console.log("post message: data = " + data)
+                //alert(data.status);
+                //$("#send-body").append('<p>' + data.body + '</p>');
+                $("#message-input")[0].value = ""
+            },
+            failure: function(errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
 }
 
 //点击发送按钮发送
@@ -49,14 +55,30 @@ function get_new_messages() {
         dataType: "json",
         success: function(data){
             //alert(data.status);
+           // console.log(data.signinuser)
+
             data.body.forEach(function(item){
 
-                if (item.username == "") {
-                    window.location = "/auth/signin"
+               // if (item.username == "") {
+                //window.location = "/auth/signin"
+                //}
+                //console.log(item.add_time)
+                var ldate = new Date(item.add_time);
+                var Y = ldate.getFullYear()
+                var M = ldate.getMonth() + 1
+                var D = ldate.getDate()
+                var h = ldate.getHours()
+                var m = ldate.getMinutes()
+                var s = ldate.getSeconds()
+                //ltime = Y+"年"+M+"月"+D+"日 "+h+":"+m+":"+s
+                ltime = M+"月"+D+"日 "+h+":"+m
+
+                if (item.username == data.signinuser){
+                    $("#send-body").append('<div  class="show-message-me"><div class="date-me">'+ ltime+'</div><div class="show-username-me">' + item.username + "</div>" + ' <div class="msg-body"><div class="bubble-me me">' + item.msg + '</div></div></div>');
+                } else {
+                    $("#send-body").append('<div  class="show-message-you"><div class="date-you">'+ ltime+'</div><div class="show-username-you">' + item.username + "</div>" + ' <div class="msg-body"><div class="bubble-you you">' + item.msg + '</div></div></div>');
                 }
-                else{
-                    $("#send-body").append('<p><b>' + item.username + "</b> say" + ' : ' + item.msg + '</p>');
-                }
+
                 //在消息显示框内最底层，最后的输入总是显示在框内最后
                 (function () {
                     var wtf = $('#send-body');
@@ -69,7 +91,7 @@ function get_new_messages() {
 
             $("#onlineuser").empty()
             data.onlineusers.forEach(function(username){
-                $("#onlineuser").append('<p>' + username + '</p>');
+                $("#onlineuser").append( '<p> <span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="user-list">' + username + '</span></p>');
                 (function () {
                     var wtf = $('#onlineuser');
                     var height = wtf[0].scrollHeight;
@@ -171,3 +193,10 @@ $("#signout").click(function (event) {
     });
 })
 
+$(document)
+    .ready(
+        function() {
+            var h = ( $("html").height() - $("nav.navbar").height() - $("form").height() ) / 2;
+            $("form").css("margin-top",h-30);
+        }
+    )

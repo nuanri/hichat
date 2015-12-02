@@ -55,7 +55,8 @@ func select_message_first(db *sql.DB) []map[string]interface{} {
 */
 
 func select_message_time(db *sql.DB, mysql_dt string) []map[string]interface{} {
-	rows, err := db.Query("select msg, user, add_time from msg_record where add_time >=?", mysql_dt)
+
+	rows, err := db.Query("select msg, user, add_time from msg_record where add_time >=? and add_time < ?", mysql_dt, time.Now())
 	if err != nil {
 		fmt.Println("err3:", err)
 	}
@@ -70,9 +71,11 @@ func select_message_time(db *sql.DB, mysql_dt string) []map[string]interface{} {
 		if err != nil {
 			fmt.Println("err4:", err)
 		}
+		uadd_time, _ := time.Parse("2006-01-02 15:04:05", add_time)
+
 		*data = append(*data, map[string]interface{}{
 			"msg":      msg,
-			"add_time": add_time,
+			"add_time": uadd_time,
 			"username": user,
 		})
 
@@ -97,9 +100,10 @@ func select_message_new(db *sql.DB) []map[string]interface{} {
 		if err != nil {
 			fmt.Println("err4:", err)
 		}
+		uadd_time, _ := time.Parse("2006-01-02 15:04:05", add_time)
 		*data = append(*data, map[string]interface{}{
 			"msg":      msg,
-			"add_time": add_time,
+			"add_time": uadd_time,
 			"username": user,
 		})
 

@@ -1,61 +1,100 @@
 {{define "content"}}
-      <div class="row">
+<div class="row">
 
-        <div class="col-lg-8" id="main-board">
+  <div class="col-lg-3">
+    <div id="status-friend" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">在线成员</h3>
+      </div>
+      <div id="onlineuser"class="panel-body">
+        {{range $index, $value := .onlineusers}}
+        <p>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+          <span class="user-list">{{$value}}</span>
+        </p>
+        {{end}}
+      </div>
+    </div>
+  </div>
 
-          <div class="panel panel-default">
-            <div id="send-body" class="panel-body">
-              {{range $index, $msg := .body}}
-              <p><b>{{$msg.username}} </b><span>say</span>: {{$msg.msg}}</p>
-              {{end}}
-            </div>
-          </div>
 
-          <div class="input-group">
-            <input id="message-input" type="text" class="form-control" placeholder="Hello, World!">
-            <span class="input-group-btn">
-              <button id="send-btn" class="btn btn-default" type="button">发送</button>
-            </span>
-          </div><!-- /input-group -->
+  <div class="col-lg-9" id="main-board">
+    <div class="panel panel-default panel-msg">
+      <div id="send-body" class="panel-body">
+        {{range $index, $msg := .body}}
+
+        {{if  eq $msg.username $.User.Username}}
+        <div class="show-message-me">
+          <div class="utcdate date-me">{{$msg.add_time}}</div>
+          <div class="show-username-me">{{$msg.username}}</div>
+          <div class="msg-body"><div class="bubble-me me">{{$msg.msg}}</div></div>
         </div>
 
-        <div class="col-lg-3">
-          <div id="status-friend" class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">在线成员</h3>
-            </div>
-            <div id="onlineuser"class="panel-body">
-              {{range $index, $value := .onlineusers}}
-              <p>{{$value}}</p>
-              {{end}}
-            </div>
-          </div>
+        {{else}}
+
+        <div class="show-message-you">
+          <div class="utcdate date-you">{{$msg.add_time}}</div>
+          <div class="show-username-you">{{$msg.username}}</div>
+          <div class="msg-body"><div class="bubble-you you">{{$msg.msg}}</div></div>
         </div>
+
+        {{end}}
+        {{end}}
 
       </div>
-      <script>
-        $(function(){
-        get_new_messages()
-        $("#send-body").height($(window).height()-200);
-        $(window).resize(function() {
-        $("#send-body").height($(window).height()-200);
-        });
-        });
+    </div>
 
-        $(function(){
-        $("#onlineuser").height($(window).height()-200);
-        $(window).resize(function() {
-        $("#onlineuser").height($(window).height()-200);
-        });
-        });
+    <div class="textarea-wrapper">
+      <textarea id="message-input" class="form-control" rows="3" placeholder="Hello, World!">
+      </textarea>
+      <!-- <span class="input-group-btn">
+           <button id="send-btn" class="btn btn-default" type="button">发送</button>
+      </span> -->
+    </div><!-- /input-group -->
+  </div>
 
-        $(function () {
-        var wtf = $('#send-body');
-        var height = wtf[0].scrollHeight;
-        wtf.scrollTop(height);
-        })();
+</div>
+<script>
+
+  $(function(){
+    get_new_messages()
+    $("#send-body").height($(window).height()-$("nav.navbar").height()-$(".textarea-wrapper").height()-30-3);
+    $(window).resize(function() {
+    $("#send-body").height($(window).height()-$("nav.navbar").height()-$(".textarea-wrapper").height()-30-3);
+    })
+  
+  
+    $(".utcdate").each(function(s) {
+      var ldate = new Date($(this).text());
+      var Y = ldate.getFullYear()
+      var M = ldate.getMonth() + 1
+      var D = ldate.getDate()
+      var h = ldate.getHours()
+      var m = ldate.getMinutes()
+      var s = ldate.getSeconds()
+      $(this).text(M+"月"+D+"日 "+h+":"+m);
+    });
+  
+  });
+
+  $(function() {
+  var h = ( $(window).height() - $("nav.navbar").height()-3);
+  $("#status-friend").height(h);
+  $(window).resize(function() {
+  var h = ( $(window).height() - $("nav.navbar").height()-3);
+  $("#status-friend").height(h);
+  })
+  });
+
+  $(function () {
+  var wtf = $("#send-body");
+  var height = wtf[0].scrollHeight;
+  wtf.scrollTop(height);
+  })();
 
 
-      </script>
+
+
+</script>
 
 {{end}}

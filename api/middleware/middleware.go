@@ -40,7 +40,7 @@ func GetSession(c *gin.Context) (session *Session, err error) {
 
 	now := time.Now()
 	utcnow := now.Add(-8 * time.Hour)
-	d_time := utcnow.Add(-2 * time.Minute)
+	d_time := utcnow.Add(-60 * time.Minute)
 	l_time := d_time.Format("2006-01-02 15:04:05")
 
 	//fmt.Println("u.LastActTime == >", u.LastActTime)

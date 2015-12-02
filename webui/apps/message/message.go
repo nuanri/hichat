@@ -59,7 +59,7 @@ func GetMessages(c *gin.Context) {
 	method := "GET"
 	var b []byte
 	body := GetBackendApi(sid, method, url, b)
-	//fmt.Printf("get messages: body = %#v\n", body)
+	//fmt.Printf("get messages: body = %#v\n", string(body))
 	c.String(200, string(body))
 }
 

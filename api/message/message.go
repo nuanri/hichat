@@ -30,6 +30,9 @@ func NewMessage(c *gin.Context) {
 		//fmt.Printf("%#v\n", msg)
 		conn := db.GetConnection()
 		//fmt.Println("--->", username)
+		if msg.Body == "" {
+			return
+		}
 		if username == "" {
 			c.JSON(400, gin.H{"error": "session expired"})
 			return
@@ -53,6 +56,9 @@ func GetMessages(c *gin.Context) {
 	//user, _ := c.Get("User")
 	//sid, _ := c.Get("Sid")
 	//fmt.Println("get user===>sid", user, sid)
+	user, _ := c.Get("User")
+	username := user.(middleware.Userinfo).Username
+
 	var data_time []map[string]interface{}
 	var online_users []string
 
@@ -91,5 +97,5 @@ func GetMessages(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, gin.H{"body": data_time, "onlineusers": online_users})
+	c.JSON(http.StatusOK, gin.H{"signinuser": username, "body": data_time, "onlineusers": online_users})
 }
