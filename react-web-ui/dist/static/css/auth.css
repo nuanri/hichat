@@ -1,0 +1,35 @@
+html, body {
+    height: 100%;
+    min-height: 100%;
+}
+
+body {
+    background-image: url('../img/login_4.jpg');
+    /*background-position: center;*/
+    /*background-size: cover;*/
+    /*background-size: 100% auto;*/
+    background-size: 100%;
+}
+
+#siginform {
+    padding: 10px;
+    margin:  auto;
+    width: 35%;
+    background-color: #3B9487;
+    opacity:0.6;
+    filter:alpha(opacity=60);
+}
+
+#signup-request-form {
+    padding: 10px;
+    margin:  auto;
+    width: 35%;
+    background-color: #3B9487;
+    opacity:0.6;
+    filter:alpha(opacity=60);
+}
+
+#signin-error, #signup-error{
+    color:red;
+}
+
