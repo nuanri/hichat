@@ -1,0 +1,4 @@
+export const c_account = {
+  READ_SUCCESS: 'READ_ACCOUNT_SUCCESS',
+  READ_FAILURE: 'READ_ACCOUNT_FAILURE',
+}

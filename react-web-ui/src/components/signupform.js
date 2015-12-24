@@ -19,7 +19,8 @@ class AuthSignUpForm extends Component {
       submitting
     } = this.props;
 
-    return (<form onSubmit={handleSubmit(this._submit)}>
+    return (
+      <form onSubmit={handleSubmit(this._submit)}>
         <div>
           <label>用户名</label>
           <div>
@@ -30,7 +31,7 @@ class AuthSignUpForm extends Component {
         <div>
           <label> 密码 </label>
           <div>
-            <input type="text" placeholder="密码" {...passWord}/>
+            <input type="password" placeholder="密码" {...passWord}/>
           </div>
         </div>
 
@@ -85,4 +86,4 @@ AuthSignUpForm.propTypes = {
 export default reduxForm({
     form: 'signup',
     fields: ['userName', 'passWord']
-  })(AuthSignUpForm);
+  })(AuthSignUpForm)
