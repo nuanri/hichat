@@ -147,7 +147,7 @@ func SignIn(c *gin.Context) {
 func GetUserInfo(c *gin.Context) {
 	conn := db.GetConnection()
 	sid := c.Request.Header.Get("Sid")
-
+	//fmt.Println("sid==>",sid)
 	data := get_userinfo(conn, sid)
 	c.JSON(200, gin.H{"id": data["id"], "email": data["email"], "username": data["username"], "last_msg_time": data["last_msg_time"]})
 

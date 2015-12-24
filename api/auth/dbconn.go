@@ -109,7 +109,6 @@ type Login struct {
 //验证此用户是否存在 auth_user
 func (l *Login) verify_user(db *sql.DB) bool {
 	mark_username := false
-
 	row := db.QueryRow("select id from auth_user  where username=?", l.Username)
 	var id int
 	err := row.Scan(&id)
@@ -186,13 +185,12 @@ type UserInfo struct {
 }
 
 func get_userinfo(db *sql.DB, sid string) map[string]interface{} {
-
+	//fmt.Println("Sid==>",sid)
 	row := db.QueryRow("select a.id, a.username, a.email, a.last_msg_time from  auth_user a, auth_session b where a.id=b.user_id and b.sid=?", sid)
 	var id int
 	var username string
 	var last_msg_time string
 	var email string
-
 	err := row.Scan(&id, &username, &email, &last_msg_time)
 	if err != nil {
 		fmt.Println(err)
