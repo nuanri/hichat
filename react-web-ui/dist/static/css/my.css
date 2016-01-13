@@ -1,5 +1,6 @@
-#send-body {
+.send-body {
     overflow-y: auto;
+    font-size: 15px;
     /*background-image: url('../img/message_7.jpg');*/
 /*    background-color: #CCFFCC; */
 }
@@ -41,7 +42,7 @@ body {
     border-top-right-radius: 0px;
 }
 
-#status-friend {
+.status-friend {
     background-color: #EEF4ED;
 }
 
@@ -67,16 +68,9 @@ body {
     padding: 5px;
 }
 
-#onlineuser {
+.onlineuser {
     font-weight: bold;
 }
-
-/*#show-message {
-    background-color: #F0F0F0;
-    padding: 5px;
-}
-*/
-
 
 .bubble-you {
     background-color: #8BC6A0;
@@ -155,11 +149,6 @@ body {
     right: -9px;
 }
 
-#send-body {
-    font-size: 15px;
-    /*margin: 10px;*/
-}
-
 .show-message-me {
     margin: 5px 0px;
     float: left;
@@ -199,7 +188,7 @@ body {
     float: right;
  }
 
-#message-input {
+.message-input {
     resize: none
 }
 

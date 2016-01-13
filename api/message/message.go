@@ -1,7 +1,7 @@
 package message
 
 import (
-	//"fmt"
+	"fmt"
 	"net/http"
 	"time"
 	//log "github.com/Sirupsen/logrus"
@@ -23,10 +23,12 @@ func NewMessage(c *gin.Context) {
 	user, _ := c.Get("User")
 
 	username := user.(middleware.Userinfo).Username
-	//sid, _ := c.Get("Sid")
+	sid, _ := c.Get("Sid")
+   fmt.Println("sid--->", sid)
 
 	var msg Message
-	if c.BindJSON(&msg) == nil {
+	err := c.BindJSON(&msg)
+	if err == nil {
 		//fmt.Printf("%#v\n", msg)
 		conn := db.GetConnection()
 		//fmt.Println("--->", username)
@@ -47,8 +49,8 @@ func NewMessage(c *gin.Context) {
 		}
 		return
 	}
-
-	c.JSON(400, gin.H{"error": "system-error"})
+	fmt.Println("err===",err)
+	c.JSON(400, gin.H{"error": err})
 }
 
 // 查询新消息

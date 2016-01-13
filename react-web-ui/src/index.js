@@ -9,9 +9,7 @@ import { syncReduxAndRouter } from 'redux-simple-router'
 import AuthSignUpForm from './components/signupform'
 import App from './containers/app'
 
-import configureStore from './store/configureStore'
-
-const store = configureStore()
+import store from './store/index'
 const history = createHistory()
 
 syncReduxAndRouter(history, store)

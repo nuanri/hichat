@@ -11,7 +11,7 @@ body {
     background-size: 100%;
 }
 
-#siginform {
+.siginform {
     padding: 10px;
     margin:  auto;
     width: 35%;
@@ -28,8 +28,3 @@ body {
     opacity:0.6;
     filter:alpha(opacity=60);
 }
-
-#signin-error, #signup-error{
-    color:red;
-}
-

@@ -1,7 +1,8 @@
-import React, {Component, PropTypes} from 'react';
-import {reduxForm} from 'redux-form';
+import React, {Component, PropTypes} from 'react'
+import {reduxForm} from 'redux-form'
 import { pushPath } from 'redux-simple-router'
 import {api_post} from '../api'
+import { readAccountInfo } from '../actions/account_read'
 
 export const fields = ['userName', 'passWord'];
 
@@ -20,25 +21,31 @@ class AuthSignUpForm extends Component {
     } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(this._submit)}>
-        <div>
-          <label>用户名</label>
-          <div>
+      <form className="siginform form-horizontal" onSubmit={handleSubmit(this._submit)}>
+        <div className="form-group">
+          <label className="col-sm-2 control-label">
+            <span className="glyphicon glyphicon-user" aria-hidden="true"></span>
+          </label>
+          <div className="col-sm-10">
             <input type="text" placeholder="用户名" {...userName}/>
           </div>
         </div>
 
-        <div>
-          <label> 密码 </label>
-          <div>
+        <div className="form-group">
+          <label className="col-sm-2 control-label">
+            <span className="glyphicon glyphicon-lock" aria-hidden="true"></span>
+          </label>
+          <div className="col-sm-10">
             <input type="password" placeholder="密码" {...passWord}/>
           </div>
         </div>
 
-        <div>
-          <button disabled={submitting} onClick={handleSubmit(this._submit)}>
-            Submit
-          </button>
+        <div className="form-group">
+          <div className="col-sm-offset-2 col-sm-10">
+            <button  className="btn btn-default" type="submit" disabled={submitting} onClick={handleSubmit(this._submit)}>
+              登录
+            </button>
+          </div>
         </div>
       </form>
     );
@@ -52,7 +59,7 @@ class AuthSignUpForm extends Component {
       return api_post(`/auth/signin`, {
         body: JSON.stringify(values)
       })
-      .then(res => res.json())
+      // .then(res => res.json())
       .then(json => {
         console.log('json = ', json)
         if (json.error) {
@@ -62,6 +69,7 @@ class AuthSignUpForm extends Component {
         } else {
           if (json.sid) {
             localStorage.setItem('sid', json.sid);
+            dispatch(readAccountInfo())
             dispatch(pushPath("/"))
             resolve();
           } else {

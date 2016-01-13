@@ -1,10 +1,14 @@
-var React = require('react');
+import Message from '../components/message'
+
+var React = require('react')
 var ReactDOM = require('react-dom')
 import { connect } from 'react-redux'
 
 import { Link } from 'react-router'
 
 import { readAccountInfo } from '../actions/account_read'
+import { signoutFromServer } from '../actions/signout'
+
 
 class App extends React.Component {
 
@@ -15,7 +19,7 @@ class App extends React.Component {
 
   render(){
     let { account } = this.props
-    console.log('App: account = ', this.props.account)
+    console.log('App: account ====> ', this.props.account)
 
     if (account && !account.error) {
       let current = account.current
@@ -28,12 +32,15 @@ class App extends React.Component {
               </div>
               <ul className="nav navbar-nav navbar-right">
                 <li><Link to="#">{current.username}</Link></li>
-                <li><Link to={`/auth/signout`}>注销</Link></li>
+                <li><a href="/auth/signout" onClick={this.signout.bind(this)}>注销</a></li>
               </ul>
             </div>
-            </nav>
+          </nav>
           <div>
-            { this.props.children }
+            { this.props.children
+              ? this.props.children
+              : <Message />
+            }
           </div>
         </div>
       )
@@ -57,6 +64,12 @@ class App extends React.Component {
         </div>
       )
     }
+  }
+
+  signout(e) {
+    e.preventDefault()
+    console.log('signout e = ', e)
+    this.props.dispatch(signoutFromServer())
   }
 }
 

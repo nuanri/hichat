@@ -31,10 +31,17 @@ func SessionMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		session, err := middleware.GetSession(c)
+		fmt.Println("中间件： err =", err)
+		fmt.Println("中间件： session =", session)
 		if err != nil {
 			//fmt.Println("===>", err)
 			//c.String(400, err.Error())
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(500, gin.H{"error": err.Error()})
+			c.Abort()
+			return
+		}
+		if session.User.Id == 0 {
+			c.JSON(405, gin.H{"error": "no sid"})
 			c.Abort()
 			return
 		}
@@ -54,18 +61,21 @@ func main() {
 
 	router := gin.Default()
 	router.Use(CORSMiddleware())
-	router.Use(SessionMiddleware())
 
+	user := router.Group("/")
+	user.Use(SessionMiddleware())
+	{
+		user.GET("/auth/userinfo", auth.GetUserInfo)
+		user.GET("/auth/signout", auth.Signout)
+
+		// message
+		user.GET("/messages", message.GetMessages)
+		user.POST("/messages", message.NewMessage)
+	}
 	// auth
 	router.POST("/signup/request", auth.SignUpRequest)
 	router.POST("/register/passwd", auth.SignUp)
 	router.POST("/auth/signin", auth.SignIn)
-	router.GET("/auth/userinfo", auth.GetUserInfo)
-	router.GET("/auth/signout", auth.Signout)
-
-	// message
-	router.GET("/messages", message.GetMessages)
-	router.POST("/messages", message.NewMessage)
 
 	router.Run(":8080")
 }

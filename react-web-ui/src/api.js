@@ -1,4 +1,7 @@
-import fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch'
+import { pushPath } from 'redux-simple-router'
+import store from './store/index'
+
 
 function api_request(method, url, options={}) {
   let sid = localStorage.getItem('sid');
@@ -15,6 +18,26 @@ function api_request(method, url, options={}) {
   let full_url = `/api${url}`;
 
   return fetch(full_url, options)
+  .then(r => r.text())
+  .then(body => {
+    console.log('API返回：', body)
+    let data = {}
+    if (body) {
+      try {
+        data = JSON.parse(body)
+        if (data.error) {
+          let error = data.error
+          if (error == "no sid") {
+            store.dispatch(pushPath('/auth/signup'))
+          }
+        }
+      } catch(e) {
+        data["error"] = e
+        console.error(e)
+      }
+    }
+    return data
+  })
 }
 
 function api_get(url, options={}) {

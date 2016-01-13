@@ -10,6 +10,7 @@ export default function accountReducer(state={
   case c_account.READ_SUCCESS:
     return Object.assign({}, state, {
       current: action.body,
+      error: undefined,
     })
 
   case c_account.READ_FAILURE:

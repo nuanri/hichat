@@ -19,12 +19,16 @@ export function readAccountInfo() {
   return dispatch => {
     return api_get('/auth/userinfo')
     // .then(res => res.json())
-    .then(function(res) {
-      return res.json()
-    })
+    // .then(function(res) {
+    //   return res.json()
+    // })
     .then(json => {
       console.log('json = ', json)
-      dispatch(read_account_success(json))
+      if (json.error) {
+        dispatch(read_account_failed(json.error))
+      } else {
+        dispatch(read_account_success(json))
+      }
     })
     .catch(error => dispatch(read_account_failed(error)))
   }
