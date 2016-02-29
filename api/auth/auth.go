@@ -41,27 +41,6 @@ func SignUpRequest(c *gin.Context) {
 	}
 }
 
-//使用 sendcloud 发送邮件
-func SendMail(email string, authcode string) {
-	s := sendcloud.SendCloud{
-		ApiUser:  "hichat",
-		ApiKey:   "",
-		From:     "",
-		Fromname: "",
-	}
-
-	tpl_name := "authcode_request"
-
-	tos := []string{email}
-	subs := map[string]interface{}{
-		//邮件模板调用名称
-		"%name%":     []string{email},
-		"%authcode%": []string{authcode},
-	}
-
-	s.TemplateSend(tos, subs, tpl_name)
-}
-
 func SignUp(c *gin.Context) {
 	s := &SignupStat{}
 
