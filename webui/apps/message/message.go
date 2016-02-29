@@ -23,7 +23,7 @@ func IndexHandler(c *gin.Context) {
 
 	bapi := auth.GetBackendApi2(c)
 	data := gin.H{}
-	if err := bapi.Get(&data, "http://192.168.0.7:8080/messages"); err != nil {
+	if err := bapi.Get(&data, "http://127.0.0.1:8080/messages"); err != nil {
 		fmt.Println("bapi failed:", err)
 		return
 	}
@@ -55,7 +55,7 @@ func GetMessages(c *gin.Context) {
 	}
 	sid := cookie.Value
 	lasttime := c.Query("t")
-	url := "http://192.168.0.7:8080/messages?t=" + lasttime
+	url := "http://127.0.0.1:8080/messages?t=" + lasttime
 	method := "GET"
 	var b []byte
 	body := GetBackendApi(sid, method, url, b)
@@ -79,7 +79,7 @@ func PostMessages(c *gin.Context) {
 	err = c.Bind(&msg)
 	if err == nil {
 		b := GetJson(msg)
-		url := "http://192.168.0.7:8080/messages"
+		url := "http://127.0.0.1:8080/messages"
 		method := "POST"
 		body := GetBackendApi(sid, method, url, b)
 		fmt.Printf("body = %#v\n", string(body))

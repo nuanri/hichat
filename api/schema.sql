@@ -11,10 +11,11 @@ CREATE TABLE `auth_user` (
   `username` char(60) NOT NULL,
   `password` char(128) NOT NULL,
   `email` char(60) NOT NULL,
-  `online` boolean not null,
-  `last_activity_time` datetime DEFAULT NULL,
+  `online` tinyint(1) NOT NULL,
+  `last_msg_time` datetime DEFAULT NULL,
+  `last_act_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ;
 
 CREATE TABLE `auth_session` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

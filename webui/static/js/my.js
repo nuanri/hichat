@@ -119,7 +119,7 @@ $( "#get-authcode-bt" ).bind("click", function() {
     $(this).unbind("click");
 
     $.ajax({
-        url: "http://192.168.0.7:8080/signup/request",
+        url: "http://demo.hichat.xyz:8080/signup/request",
         method: "POST",
         // The key needs to match your method's input parameter (case-sensitive).
         data: JSON.stringify({"email": $("#inputEmail3")[0].value }),
@@ -156,7 +156,7 @@ $("#signup-request-bt").click(function () {
     password = $("#inputPassword3")[0].value
 
     $.ajax({
-        url: "http://192.168.0.7:8080/register/passwd",
+        url: "http://demo.hichat.xyz:8080/register/passwd",
         method: "POST",
         // The key needs to match your method's input parameter (case-sensitive).
         data: JSON.stringify({"authcode": authcode, "email":email, "authcode_key": authcode_key, "username": username, "password":password }),

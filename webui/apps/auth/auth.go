@@ -61,7 +61,7 @@ func PostSignin(c *gin.Context) {
 	err := c.Bind(&form)
 	if err == nil {
 		b := GetJson(form)
-		url := "http://192.168.0.7:8080/auth/signin"
+		url := "http://127.0.0.1:8080/auth/signin"
 		method := "POST"
 		body := GetBackendApi("", method, url, b)
 
@@ -82,7 +82,7 @@ func PostSignin(c *gin.Context) {
 		bapi := GetBackendApi2(c)
 		bapi.Sid = m.Sid
 		u := &UserInfo{}
-		if err := bapi.Get(&u, "http://192.168.0.7:8080/auth/userinfo"); err != nil {
+		if err := bapi.Get(&u, "http://127.0.0.1:8080/auth/userinfo"); err != nil {
 			fmt.Println("获取用户信息出错:", err)
 			return
 		}
@@ -113,7 +113,7 @@ func Siginout(c *gin.Context) {
 	}
 	sid := cookie.Value
 	Signout_del_session(conn, sid)
-	url := "http://192.168.0.7:8080/auth/signout"
+	url := "http://127.0.0.1:8080/auth/signout"
 	method := "GET"
 	var b []byte
 	body := GetBackendApi(sid, method, url, b)

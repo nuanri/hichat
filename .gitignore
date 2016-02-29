@@ -32,3 +32,9 @@ webui/hichat.db
 
 react-web-ui/node_modules/
 react-ui/
+
+api/auth/sendcloud.go
+
+*.xz
+
+*.sh

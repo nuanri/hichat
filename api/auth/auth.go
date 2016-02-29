@@ -33,7 +33,7 @@ func SignUpRequest(c *gin.Context) {
 
 		insert_authcode(conn, s.Authcode_key, s.Authcode, s.Email)
 
-		//SendMail(s.Email, s.Authcode)
+		SendMail(s.Email, s.Authcode)
 
 		c.JSON(200, gin.H{"authcode_key": s.Authcode_key})
 	} else {
@@ -45,9 +45,9 @@ func SignUpRequest(c *gin.Context) {
 func SendMail(email string, authcode string) {
 	s := sendcloud.SendCloud{
 		ApiUser:  "hichat",
-		ApiKey:   "20C0TGNizqxfnGQq",
-		From:     "service@notice.hichat.xyz",
-		Fromname: "HiChat 验证码",
+		ApiKey:   "",
+		From:     "",
+		Fromname: "",
 	}
 
 	tpl_name := "authcode_request"
