@@ -5,7 +5,6 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
-	"github.com/hichatxyz/sendcloud"
 
 	"nuanri/hichat/api/db"
 )
