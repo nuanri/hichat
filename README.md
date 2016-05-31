@@ -1,2 +1,2 @@
 # hichat
-hichat.xyz
+demo.hichat.xyz
