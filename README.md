@@ -1,5 +1,4 @@
 # 关于 hichat
-- http://demo.hichat.xyz
 - hichat 基于Golang 开发的简单即时聊天室（发邮件的服务不太稳定）
 
 # hichat 基本操作
